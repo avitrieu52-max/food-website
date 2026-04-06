@@ -1,0 +1,83 @@
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.error-message {
+    border: 1px solid #f5c6cb;
+    background: #f8d7da;
+    color: #842029;
+    padding: 1rem 1.25rem;
+    border-radius: 0.85rem;
+}
+
+.error-message ul {
+    margin-bottom: 0;
+}
+
+.product-card img,
+.product-item img,
+.card-img-top {
+    min-height: 220px;
+    object-fit: cover;
+}
+
+.breadcrumb {
+    background: #ffffff;
+    border-radius: 0.75rem;
+}
+
+.alert {
+    border-radius: 1rem;
+}
+
+.form-control {
+    border-radius: 1rem;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(61, 122, 57, 0.2);
+}
+
+.btn {
+    border-radius: 50px;
+}
+
+.btn-primary,
+.btn-success,
+.btn-outline-primary,
+.btn-outline-secondary {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3d7a39;
+    border-radius: 10px;
+}
