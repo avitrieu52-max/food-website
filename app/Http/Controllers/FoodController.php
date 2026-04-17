@@ -9,17 +9,34 @@ use Illuminate\Support\Str;
 
 class FoodController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $foods = Food::all();
+        $query = Food::where('status', true);
+
+        // Lọc theo danh mục nếu có tham số category trên URL
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        // Xử lý sắp xếp
+        $sort = $request->get('sort', 'newest');
+        switch ($sort) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        // withQueryString() giúp giữ lại các tham số lọc khi chuyển trang
+        $foods = $query->paginate(12)->withQueryString();
         $categories = Food::getCategories();
         
-        $groupedFoods = [];
-        foreach ($categories as $key => $label) {
-            $groupedFoods[$key] = Food::where('category', $key)->get();
-        }
-        
-        return view('foods.index', compact('foods', 'categories', 'groupedFoods'));
+        return view('foods.list', compact('foods', 'categories'));
     }
 
     public function create()

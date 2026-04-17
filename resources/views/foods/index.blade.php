@@ -110,48 +110,42 @@
     </div>
 </section>
 
-<section id="products" class="container mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-        <div><div class="section-title">Sản phẩm của chúng tôi</div></div>
-        <div class="product-tab" role="tablist">
-            @foreach($categories as $key => $label)
-                <button class="tablinks @if($loop->first) active @endif" type="button" data-target="tab_{{ $key }}">{{ $label }}</button>
-            @endforeach
-        </div>
-    </div>
-
-    @foreach($categories as $key => $label)
-        <div id="tab_{{ $key }}" class="tabcontent" @if($loop->first) style="display: block;" @else style="display: none;" @endif>
-            <div class="row gy-4">
-                @foreach($groupedFoods[$key]->take(8) as $food)
-                    <div class="col-xl-3 col-md-4 col-sm-6">
-                        <div class="product-item">
-                            <div class="product-img">
-                                <a href="{{ route('foods.show', $food) }}">
-                                    <img src="{{ $food->image_url ?? 'https://images.unsplash.com/photo-1600718379463-c5df2d7fd4b6?w=480' }}" alt="{{ $food->name }}">
-                                </a>
-                            </div>
-                            <div class="product-info">
-                                <h5><a href="{{ route('foods.show', $food) }}" class="text-dark">{{ $food->name }}</a></h5>
-                                <p>{{ Str::limit($food->description, 60) }}</p>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        @if($food->sale_price)
-                                            <span class="price">{{ number_format($food->sale_price) }}đ</span>
-                                            <span class="original-price"><s>{{ number_format($food->price) }}đ</s></span>
-                                        @else
-                                            <span class="price">{{ number_format($food->price) }}đ</span>
-                                        @endif
-                                    </div>
-                                    <a href="{{ route('foods.show', $food) }}" class="btn btn-success btn-sm">Chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+{{-- Section: Sản phẩm mới --}}
+<section id="new-products" class="container mb-5">
+    <div class="section-title">Sản phẩm mới</div>
+    <p class="mb-4 text-muted">{{ count($new_products) }} sản phẩm mới vừa cập bến</p>
+    <div class="row gy-4">
+        @foreach($new_products as $food)
+            <div class="col-xl-3 col-md-4 col-sm-6">
+                @include('foods._product_item', ['food' => $food])
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    </div>
+    <div class="mt-4">{{ $new_products->links() }}</div>
+</section>
+
+{{-- Section: Sản phẩm khuyến mãi --}}
+<section id="promotion-products" class="container mb-5">
+    <div class="section-title">Sản phẩm khuyến mãi</div>
+    <div class="row gy-4">
+        @foreach($promotion_products as $food)
+            <div class="col-xl-3 col-md-4 col-sm-6">
+                @include('foods._product_item', ['food' => $food])
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- Section: Sản phẩm nổi bật (Top) --}}
+<section id="top-products" class="container mb-5">
+    <div class="section-title">Sản phẩm đề nghị</div>
+    <div class="row gy-4">
+        @foreach($top_products as $food)
+            <div class="col-xl-3 col-md-4 col-sm-6">
+                @include('foods._product_item', ['food' => $food])
+            </div>
+        @endforeach
+    </div>
 </section>
 
 <section class="container mb-5" id="guide">

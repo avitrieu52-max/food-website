@@ -49,9 +49,9 @@
         </div>
         
         <div class="d-grid gap-2 d-md-flex">
-            <button class="btn btn-primary btn-lg">
+            <a href="{{ route('banhang.addtocart', $food->id) }}" class="btn btn-primary btn-lg">
                 <i class="fas fa-shopping-cart"></i> Mua ngay
-            </button>
+            </a>
             <button class="btn btn-outline-secondary btn-lg">
                 <i class="fas fa-heart"></i> Yêu thích
             </button>
@@ -88,7 +88,7 @@
                         <span class="sale-price">{{ number_format($product->price) }}đ</span>
                     @endif
                 </div>
-                <a href="{{ route('foods.show', $product) }}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                <a href="{{ route('banhang.chitiet', $product->id) }}" class="btn btn-sm btn-outline-primary mt-2 w-100">
                     Xem chi tiết
                 </a>
             </div>

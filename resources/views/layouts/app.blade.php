@@ -352,16 +352,16 @@
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Trang chủ</a></li>
                         <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#products">Sản phẩm</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('foods.index') ? 'active' : '' }}" href="{{ route('foods.index') }}">Sản phẩm</a></li>
                         <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
                         <li class="nav-item"><a class="nav-link" href="#guide">Hướng dẫn</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('foods.manage') }}"><i class="fas fa-cogs"></i> Quản lý</a></li>
                     </ul>
                     <div class="hd-actions">
                         <a href="#" class="action-link"><i class="fas fa-search"></i></a>
-                        <a href="#" class="action-link position-relative">
+                        <a href="{{ route('banhang.getdathang') }}" class="action-link position-relative">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="badge bg-success rounded-pill position-absolute top-0 start-100 translate-middle">0</span>
+                            <span class="badge bg-success rounded-pill position-absolute top-0 start-100 translate-middle">{{ $totalQty ?? 0 }}</span>
                         </a>
                     </div>
                 </div>
