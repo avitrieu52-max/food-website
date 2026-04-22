@@ -7,7 +7,10 @@ use App\Models\BillDetail;
 use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\Food;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
@@ -64,6 +67,74 @@ class PageController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function getSignin()
+    {
+        return view('dangky');
+    }
+
+    public function postSignin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:6|max:20',
+            'fullname' => 'required',
+            'repassword' => 'required|same:password',
+        ],[
+            'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Không đúng định dạng email',
+            'email.unique' => 'Email đã có người sử dụng',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'repassword.same' => 'Mật khẩu không giống nhau',
+            'password.min' => 'Mật khẩu ít nhất 6 ký tự',
+        ]);
+
+        $user = new User();
+        $user->name = $request->fullname;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->level = 3;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Tạo tài khoản thành công');
+    }
+
+    public function getLogin()
+    {
+        return view('login');
+    }
+
+    public function postLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6|max:20',
+        ],[
+            'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Không đúng định dạng email',
+            'password.required' => 'Vui lòng nhập mật khẩu',
+            'password.min' => 'Mật khẩu ít nhất 6 ký tự',
+        ]);
+
+        $credentials = ['email' => $request->email, 'password' => $request->password];
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('banhang.index')->with(['flag' => 'alert', 'message' => 'Đăng nhập thành công']);
+        }
+
+        return redirect()->back()->with(['flag' => 'danger', 'message' => 'Đăng nhập không thành công']);
+    }
+
+    public function getLogout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('banhang.index');
     }
 
     public function getCheckout()

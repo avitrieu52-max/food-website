@@ -50,7 +50,8 @@ class FoodController extends Controller
         $data = $request->validated();
         
         if ($request->hasFile('image')) {
-            $imageDir = public_path('images/foods');
+            $imageDir =
+             public_path('images/foods');
             if (! file_exists($imageDir)) {
                 mkdir($imageDir, 0755, true);
             }

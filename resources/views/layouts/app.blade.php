@@ -335,8 +335,13 @@
                     <div class="topbar-item"><i class="far fa-clock"></i> Mở cửa từ 8:00 - 22:00</div>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <a href="#" class="text-decoration-none">Đăng nhập</a>
-                    <a href="#" class="text-decoration-none">Đăng ký</a>
+                    @auth
+                        <span class="text-white-50">Chào bạn {{ Auth::user()->full_name }}</span>
+                        <a href="{{ route('getlogout') }}" class="text-decoration-none">Đăng xuất</a>
+                    @else
+                        <a href="{{ route('getlogin') }}" class="text-decoration-none">Đăng nhập</a>
+                        <a href="{{ route('getsignin') }}" class="text-decoration-none">Đăng ký</a>
+                    @endauth
                 </div>
             </div>
         </div>
