@@ -17,4 +17,15 @@ class BillDetail extends Model
         'quantity',
         'unit_price',
     ];
+
+    public function bill()
+    {
+        return $this->belongsTo(Bill::class, 'id_bill');
+    }
+
+    public function food()
+    {
+        return $this->belongsTo(Food::class, 'id_product');
+    }
 }
+

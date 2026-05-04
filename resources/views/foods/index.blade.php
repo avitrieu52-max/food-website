@@ -64,6 +64,22 @@
 </div>
 
 <section id="about" class="container mb-5">
+    {{-- Thanh tìm kiếm --}}
+    <div class="card border-0 shadow-sm rounded-3 p-4 mb-5">
+        <form action="{{ route('banhang.search') }}" method="GET" class="row g-3 align-items-end">
+            <div class="col-md-9">
+                <label class="form-label fw-semibold fs-5">Tìm kiếm sản phẩm</label>
+                <input type="text" name="q" value="{{ request('q') }}" class="form-control form-control-lg"
+                       placeholder="Nhập tên sản phẩm bạn muốn tìm...">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-success btn-lg w-100">
+                    <i class="fas fa-search me-2"></i>Tìm kiếm
+                </button>
+            </div>
+        </form>
+    </div>
+
     <div class="section-title">Giới thiệu</div>
     <div class="row gy-4 align-items-center">
         <div class="col-lg-4">
@@ -112,8 +128,10 @@
 
 {{-- Section: Sản phẩm mới --}}
 <section id="new-products" class="container mb-5">
-    <div class="section-title">Sản phẩm mới</div>
-    <p class="mb-4 text-muted">{{ count($new_products) }} sản phẩm mới vừa cập bến</p>
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="section-title mb-0">Sản phẩm mới</div>
+        <a href="{{ route('foods.index') }}" class="btn btn-outline-success btn-sm">Xem tất cả</a>
+    </div>
     <div class="row gy-4">
         @foreach($new_products as $food)
             <div class="col-xl-3 col-md-4 col-sm-6">
@@ -121,12 +139,14 @@
             </div>
         @endforeach
     </div>
-    <div class="mt-4">{{ $new_products->links() }}</div>
 </section>
 
 {{-- Section: Sản phẩm khuyến mãi --}}
 <section id="promotion-products" class="container mb-5">
-    <div class="section-title">Sản phẩm khuyến mãi</div>
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="section-title mb-0">Sản phẩm khuyến mãi</div>
+        <a href="{{ route('foods.index', ['sort' => 'newest']) }}" class="btn btn-outline-success btn-sm">Xem tất cả</a>
+    </div>
     <div class="row gy-4">
         @foreach($promotion_products as $food)
             <div class="col-xl-3 col-md-4 col-sm-6">
@@ -138,9 +158,27 @@
 
 {{-- Section: Sản phẩm nổi bật (Top) --}}
 <section id="top-products" class="container mb-5">
-    <div class="section-title">Sản phẩm đề nghị</div>
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="section-title mb-0">Sản phẩm đề nghị</div>
+        <a href="{{ route('foods.index') }}" class="btn btn-outline-success btn-sm">Xem tất cả</a>
+    </div>
     <div class="row gy-4">
         @foreach($top_products as $food)
+            <div class="col-xl-3 col-md-4 col-sm-6">
+                @include('foods._product_item', ['food' => $food])
+            </div>
+        @endforeach
+    </div>
+</section>
+
+{{-- Section: Tất cả sản phẩm --}}
+<section id="products" class="container mb-5">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="section-title mb-0">Tất cả sản phẩm</div>
+        <a href="{{ route('foods.index') }}" class="btn btn-success btn-sm">Xem thêm</a>
+    </div>
+    <div class="row gy-4">
+        @foreach($all_products as $food)
             <div class="col-xl-3 col-md-4 col-sm-6">
                 @include('foods._product_item', ['food' => $food])
             </div>

@@ -2,6 +2,8 @@
 
 @section('title', $food->name)
 
+@php use Illuminate\Support\Facades\Auth; @endphp
+
 @section('content')
 <div class="row">
     <div class="col-md-6">
@@ -49,22 +51,19 @@
         </div>
         
         <div class="d-grid gap-2 d-md-flex">
-            <a href="{{ route('banhang.addtocart', $food->id) }}" class="btn btn-primary btn-lg">
-                <i class="fas fa-shopping-cart"></i> Mua ngay
+            <a href="{{ route('banhang.addtocart', $food->id) }}" class="btn btn-success btn-lg">
+                <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
             </a>
-            <button class="btn btn-outline-secondary btn-lg">
-                <i class="fas fa-heart"></i> Yêu thích
-            </button>
-            <a href="{{ route('foods.edit', $food) }}" class="btn btn-warning btn-lg">
-                <i class="fas fa-edit"></i> Chỉnh sửa
+            <a href="{{ route('banhang.giohang') }}" class="btn btn-outline-success btn-lg">
+                <i class="fas fa-eye me-2"></i>Xem giỏ hàng
             </a>
-            <form action="{{ route('foods.destroy', $food) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="btn btn-danger btn-lg">
-                    <i class="fas fa-trash"></i> Xóa
-                </button>
-            </form>
+            @auth
+                @if(Auth::user()->level <= 2)
+                <a href="{{ route('admin.food.edit', $food->id) }}" class="btn btn-warning btn-lg">
+                    <i class="fas fa-edit me-1"></i>Sửa
+                </a>
+                @endif
+            @endauth
         </div>
     </div>
 </div>

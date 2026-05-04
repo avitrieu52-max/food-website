@@ -18,17 +18,20 @@ class PageController extends Controller
     public function getIndex()
     {
         // Lấy sản phẩm mới (dựa trên ngày tạo)
-        $new_products = Food::orderBy('created_at', 'desc')->paginate(8);
+        $new_products = Food::orderBy('created_at', 'desc')->limit(8)->get();
 
         // Lấy sản phẩm nổi bật (đề nghị)
-        $top_products = Food::where('is_featured', true)->paginate(8);
+        $top_products = Food::where('is_featured', true)->limit(8)->get();
 
         // Lấy sản phẩm khuyến mãi
         $promotion_products = Food::whereNotNull('sale_price')
             ->where('sale_price', '>', 0)
-            ->paginate(4);
+            ->limit(4)->get();
 
-        return view('foods.index', compact('new_products', 'top_products', 'promotion_products'));
+        // Tất cả sản phẩm
+        $all_products = Food::where('status', true)->orderBy('created_at', 'desc')->limit(8)->get();
+
+        return view('foods.index', compact('new_products', 'top_products', 'promotion_products', 'all_products'));
     }
 
     public function getChiTiet($id)
@@ -40,6 +43,35 @@ class PageController extends Controller
             ->get();
 
         return view('foods.show', compact('food', 'relatedProducts'));
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->get('q', '');
+        $query = Food::where('status', true);
+
+        if ($keyword) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%')
+                  ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        $foods = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
+        $categories = Food::getCategories();
+
+        return view('foods.search', compact('foods', 'categories', 'keyword'));
+    }
+
+    public function getCart()
+    {
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $cart = new Cart($oldCart);
+
+        return view('cart', [
+            'cart' => $cart,
+            'productCarts' => $cart->items,
+        ]);
     }
 
     public function addToCart(Request $request, $id)
@@ -54,6 +86,27 @@ class PageController extends Controller
         return redirect()->back()->with('success', 'Thêm sản phẩm vào giỏ hàng thành công.');
     }
 
+    public function updateCart(Request $request, $id)
+    {
+        $qty = (int) $request->input('qty', 1);
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $cart = new Cart($oldCart);
+
+        if ($qty <= 0) {
+            $cart->removeItem($id);
+        } else {
+            $cart->updateQty($id, $qty);
+        }
+
+        if (count($cart->items) > 0) {
+            Session::put('cart', $cart);
+        } else {
+            Session::forget('cart');
+        }
+
+        return redirect()->route('banhang.giohang')->with('success', 'Cập nhật giỏ hàng thành công.');
+    }
+
     public function delCartItem($id)
     {
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
@@ -66,7 +119,7 @@ class PageController extends Controller
             Session::forget('cart');
         }
 
-        return redirect()->back();
+        return redirect()->route('banhang.giohang')->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
     }
 
     public function getSignin()
@@ -194,6 +247,6 @@ class PageController extends Controller
 
         Session::forget('cart');
 
-        return redirect()->back()->with('success', 'Đặt hàng thành công. Cảm ơn bạn đã mua hàng.');
+        return redirect()->route('home')->with('success', 'Đặt hàng thành công! Cảm ơn bạn đã mua hàng. Mã đơn hàng: #' . $bill->id);
     }
 }

@@ -17,5 +17,33 @@ class Bill extends Model
         'total',
         'payment',
         'note',
+        'status',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'id_customer');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(BillDetail::class, 'id_bill');
+    }
+
+    public static function statusLabels()
+    {
+        return [
+            'pending'   => ['label' => 'Chờ xác nhận', 'class' => 'warning'],
+            'confirmed' => ['label' => 'Đã xác nhận',  'class' => 'info'],
+            'shipping'  => ['label' => 'Đang giao',    'class' => 'primary'],
+            'delivered' => ['label' => 'Đã giao',      'class' => 'success'],
+            'cancelled' => ['label' => 'Đã hủy',       'class' => 'danger'],
+        ];
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return self::statusLabels()[$this->status] ?? ['label' => $this->status, 'class' => 'secondary'];
+    }
 }
+

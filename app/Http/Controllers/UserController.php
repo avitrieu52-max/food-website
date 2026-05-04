@@ -30,7 +30,13 @@ class UserController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            return redirect('/admin/category/danhsach')->with(['flag' => 'alert', 'message' => 'Đăng nhập thành công']);
+            $request->session()->regenerate();
+            $user = Auth::user();
+            if (in_array($user->level, [1, 2])) {
+                return redirect()->route('admin.dashboard');
+            }
+            Auth::logout();
+            return redirect()->back()->with(['flag' => 'danger', 'message' => 'Bạn không có quyền truy cập admin']);
         }
 
         return redirect()->back()->with(['flag' => 'danger', 'message' => 'Đăng nhập không thành công']);

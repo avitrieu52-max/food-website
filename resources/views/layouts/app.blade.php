@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    @php use Illuminate\Support\Facades\Session; @endphp
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -358,20 +359,31 @@
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Trang chủ</a></li>
                         <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('foods.index') ? 'active' : '' }}" href="{{ route('foods.index') }}">Sản phẩm</a></li>
+                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('banhang.giohang') ? 'active' : '' }}" href="{{ route('banhang.giohang') }}">Giỏ hàng</a></li>
                         <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#guide">Hướng dẫn</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('foods.manage') }}"><i class="fas fa-cogs"></i> Quản lý</a></li>
                     </ul>
                     <div class="hd-actions">
-                        <a href="#" class="action-link"><i class="fas fa-search"></i></a>
-                        <a href="{{ route('banhang.getdathang') }}" class="action-link position-relative">
+                        <a href="{{ route('banhang.search') }}" class="action-link" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-expanded="false">
+                            <i class="fas fa-search"></i>
+                        </a>
+                        <a href="{{ route('banhang.giohang') }}" class="action-link position-relative">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="badge bg-success rounded-pill position-absolute top-0 start-100 translate-middle">{{ $totalQty ?? 0 }}</span>
+                            @if(Session::has('cart'))
+                                <span class="badge bg-success rounded-pill position-absolute top-0 start-100 translate-middle">{{ Session::get('cart')->totalQty ?? 0 }}</span>
+                            @endif
                         </a>
                     </div>
                 </div>
             </div>
         </nav>
+        <div class="collapse" id="searchBar">
+            <div class="container py-2">
+                <form action="{{ route('banhang.search') }}" method="GET" class="d-flex gap-2">
+                    <input type="text" name="q" class="form-control" placeholder="Tìm kiếm sản phẩm..." value="{{ request('q') }}" autofocus>
+                    <button type="submit" class="btn btn-success px-4"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
     </header>
 
 <main>
@@ -425,7 +437,12 @@
             </div>
         </div>
         <hr class="border-white-25 mt-4">
-        <div class="text-center text-white-50 mt-3">© 2026 AT10 FOOD - All rights reserved.</div>
+        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+            <div class="text-white-50">© 2026 AT10 FOOD - All rights reserved.</div>
+            <a href="{{ route('admin.getLogin') }}" class="text-white-50 text-decoration-none small">
+                <i class="fas fa-lock me-1"></i>Quản trị
+            </a>
+        </div>
     </div>
 </footer>
 

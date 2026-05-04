@@ -66,6 +66,26 @@ class Cart
         unset($this->items[$id]);
     }
 
+    public function updateQty($id, $qty)
+    {
+        if (!isset($this->items[$id])) {
+            return;
+        }
+
+        $item = $this->items[$id];
+        $unitPrice = $this->getUnitPrice($item['item']);
+
+        $this->totalQty -= $item['qty'];
+        $this->totalPrice -= $item['price'];
+
+        $item['qty'] = $qty;
+        $item['price'] = $unitPrice * $qty;
+
+        $this->items[$id] = $item;
+        $this->totalQty += $qty;
+        $this->totalPrice += $item['price'];
+    }
+
     private function getUnitPrice($item)
     {
         if (isset($item->sale_price) && $item->sale_price > 0) {

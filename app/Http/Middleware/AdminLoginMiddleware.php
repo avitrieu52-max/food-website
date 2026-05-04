@@ -12,7 +12,7 @@ class AdminLoginMiddleware
     {
         if (Auth::check()) {
             $user = Auth::user();
-            if ($user->level === 1 || $user->level === 2) {
+            if (in_array($user->level, [1, 2])) {
                 return $next($request);
             }
         }
