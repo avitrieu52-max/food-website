@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Food;
-use App\Http\Requests\FoodRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,108 +11,111 @@ class FoodController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Food::where('status', true);
+        $query = Food::with('category')->where('status', true);
 
-        // Lọc theo danh mục nếu có tham số category trên URL
         if ($request->filled('category')) {
-            $query->where('category', $request->category);
+            $query->where('category_id', $request->category);
         }
 
-        // Xử lý sắp xếp
         $sort = $request->get('sort', 'newest');
-        switch ($sort) {
-            case 'price_asc':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'price_desc':
-                $query->orderBy('price', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
+        match ($sort) {
+            'price_asc'  => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            default      => $query->orderBy('created_at', 'desc'),
+        };
 
-        // withQueryString() giúp giữ lại các tham số lọc khi chuyển trang
-        $foods = $query->paginate(12)->withQueryString();
-        $categories = Food::getCategories();
-        
+        $foods      = $query->paginate(12)->withQueryString();
+        $categories = Category::where('is_active', true)->orderBy('id')->get();
+
         return view('foods.list', compact('foods', 'categories'));
     }
 
     public function create()
     {
-        $categories = Food::getCategories();
+        $categories = Category::where('is_active', true)->orderBy('id')->get();
         return view('foods.create', compact('categories'));
     }
 
-    public function store(FoodRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
-        
-        if ($request->hasFile('image')) {
-            $imageDir =
-             public_path('images/foods');
-            if (! file_exists($imageDir)) {
-                mkdir($imageDir, 0755, true);
-            }
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move($imageDir, $imageName);
-            $data['image'] = 'images/foods/' . $imageName;
-        }
-        
-        $data['slug'] = Str::slug($data['slug']);
+        $request->validate([
+            'name'        => 'required|string|max:200',
+            'slug'        => 'required|string|max:200|unique:t_food,slug',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:1000',
+            'sale_price'  => 'nullable|numeric|min:0|lt:price',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'category_id' => 'required|exists:type_products,id',
+            'stock'       => 'required|integer|min:0',
+        ]);
+
+        $data = $request->only(['name', 'description', 'price', 'sale_price', 'category_id', 'stock']);
+        $data['slug']        = Str::slug($request->slug);
         $data['is_featured'] = $request->has('is_featured');
-        $data['status'] = $request->has('status');
-        
+        $data['status']      = $request->has('status');
+
+        if ($request->hasFile('image')) {
+            $dir  = public_path('images/foods');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $name = time() . '.' . $request->image->extension();
+            $request->image->move($dir, $name);
+            $data['image'] = 'images/foods/' . $name;
+        }
+
         Food::create($data);
-        
-        return redirect()->route('foods.index')
-            ->with('success', 'Thêm sản phẩm thành công!');
+
+        return redirect()->route('foods.index')->with('success', 'Thêm sản phẩm thành công!');
     }
 
     public function show(Food $food)
     {
-        $relatedProducts = Food::where('category', $food->category)
+        $food->load('category');
+        $relatedProducts = Food::with('category')
+            ->where('category_id', $food->category_id)
             ->where('id', '!=', $food->id)
-            ->limit(4)
-            ->get();
-            
+            ->limit(4)->get();
+
         return view('foods.show', compact('food', 'relatedProducts'));
     }
 
     public function edit(Food $food)
     {
-        $categories = Food::getCategories();
+        $categories = Category::where('is_active', true)->orderBy('id')->get();
         return view('foods.edit', compact('food', 'categories'));
     }
 
-    public function update(FoodRequest $request, Food $food)
+    public function update(Request $request, Food $food)
     {
-        $data = $request->validated();
-        
+        $request->validate([
+            'name'        => 'required|string|max:200',
+            'slug'        => 'required|string|max:200|unique:t_food,slug,' . $food->id,
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:1000',
+            'sale_price'  => 'nullable|numeric|min:0|lt:price',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'category_id' => 'required|exists:type_products,id',
+            'stock'       => 'required|integer|min:0',
+        ]);
+
+        $data = $request->only(['name', 'description', 'price', 'sale_price', 'category_id', 'stock']);
+        $data['slug']        = Str::slug($request->slug);
+        $data['is_featured'] = $request->has('is_featured');
+        $data['status']      = $request->has('status');
+
         if ($request->hasFile('image')) {
-            // Xóa ảnh cũ
             if ($food->image && file_exists(public_path($food->image))) {
                 unlink(public_path($food->image));
             }
-            
-            $imageDir = public_path('images/foods');
-            if (! file_exists($imageDir)) {
-                mkdir($imageDir, 0755, true);
-            }
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move($imageDir, $imageName);
-            $data['image'] = 'images/foods/' . $imageName;
+            $dir  = public_path('images/foods');
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            $name = time() . '.' . $request->image->extension();
+            $request->image->move($dir, $name);
+            $data['image'] = 'images/foods/' . $name;
         }
-        
-        $data['slug'] = Str::slug($data['slug']);
-        $data['is_featured'] = $request->has('is_featured');
-        $data['status'] = $request->has('status');
-        
+
         $food->update($data);
-        
-        return redirect()->route('foods.index')
-            ->with('success', 'Cập nhật sản phẩm thành công!');
+
+        return redirect()->route('foods.index')->with('success', 'Cập nhật sản phẩm thành công!');
     }
 
     public function destroy(Food $food)
@@ -120,24 +123,26 @@ class FoodController extends Controller
         if ($food->image && file_exists(public_path($food->image))) {
             unlink(public_path($food->image));
         }
-        
         $food->delete();
-        
-        return redirect()->route('foods.index')
-            ->with('success', 'Xóa sản phẩm thành công!');
+
+        return redirect()->route('foods.index')->with('success', 'Xóa sản phẩm thành công!');
     }
-    
-    public function showByCategory($category)
+
+    // Trang loại sản phẩm — dùng category_id
+    public function showByCategory($categoryId)
     {
-        $foods = Food::where('category', $category)->get();
-        $categoryLabel = Food::getCategories()[$category] ?? $category;
-        
-        return view('foods.category', compact('foods', 'categoryLabel', 'category'));
+        $category = Category::findOrFail($categoryId);
+        $foods    = Food::with('category')
+            ->where('category_id', $categoryId)
+            ->where('status', true)
+            ->get();
+
+        return view('foods.category', compact('foods', 'category'));
     }
-    
+
     public function manage()
     {
-        $foods = Food::orderBy('created_at', 'desc')->get();
+        $foods = Food::with('category')->orderBy('created_at', 'desc')->get();
         return view('foods.manage', compact('foods'));
     }
 }

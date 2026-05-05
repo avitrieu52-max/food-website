@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#f0ece4"/>
+  <rect x="140" y="100" width="120" height="140" rx="8" fill="#c9a96e" opacity="0.3"/>
+  <path d="M160 100 Q200 80 240 100 L250 130 Q200 110 150 130 Z" fill="#c9a96e" opacity="0.5"/>
+  <circle cx="200" cy="75" r="20" fill="#c9a96e" opacity="0.4"/>
+  <text x="200" y="280" text-anchor="middle" font-family="Arial" font-size="16" fill="#c9a96e">Chưa có ảnh</text>
+</svg>

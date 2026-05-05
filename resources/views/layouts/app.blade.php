@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>AT10 Fashion - @yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -234,15 +235,72 @@
             position: relative;
             overflow: hidden;
             height: 280px;
+            background: #f0ece4;
         }
         .product-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            object-position: center top;
+            transition: transform 0.4s ease;
+            filter: none;
         }
         .product-item:hover .product-img img {
-            transform: scale(1.08);
+            transform: scale(1.06);
+        }
+
+        /* Wishlist button */
+        .wishlist-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            padding: 0;
+        }
+        .wishlist-btn i {
+            font-size: 0.9rem;
+            color: #ccc;
+            transition: all 0.25s ease;
+        }
+        .wishlist-btn:hover {
+            background: #fff;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .wishlist-btn:hover i,
+        .wishlist-btn.active i {
+            color: #e74c3c;
+        }
+        .wishlist-btn.active {
+            background: #fff0f0;
+        }
+
+        /* Cart badge animation */
+        @keyframes cartBounce {
+            0%   { transform: translate(-50%, -50%) scale(1); }
+            40%  { transform: translate(-50%, -50%) scale(1.5); }
+            70%  { transform: translate(-50%, -50%) scale(0.9); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        .cart-badge-bounce {
+            animation: cartBounce 0.4s ease forwards;
+        }
+        #cart-badge {
+            transition: background 0.2s;
+            min-width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .product-info {
             padding: 1.5rem;
@@ -376,8 +434,8 @@
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{{ route('foods.index') }}">Tất cả sản phẩm</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                @foreach(\App\Models\Food::getCategories() as $key => $label)
-                                <li><a class="dropdown-item" href="{{ route('foods.category', $key) }}">{{ $label }}</a></li>
+                                @foreach(\App\Models\Category::where('is_active', true)->orderBy('id')->get() as $cat)
+                                <li><a class="dropdown-item" href="{{ route('foods.category', $cat->id) }}">{{ $cat->name }}</a></li>
                                 @endforeach
                             </ul>
                         </li>
@@ -396,10 +454,18 @@
                             <i class="fas fa-user-circle"></i>
                         </a>
                         @endauth
-                        <a href="{{ route('banhang.giohang') }}" class="action-link position-relative">
+                        <a href="{{ route('banhang.giohang') }}" class="action-link position-relative" id="cart-icon-link">
                             <i class="fas fa-shopping-cart"></i>
-                            @if(Session::has('cart'))
-                                <span class="badge bg-success rounded-pill position-absolute top-0 start-100 translate-middle">{{ Session::get('cart')->totalQty ?? 0 }}</span>
+                            @if(Session::has('cart') && (Session::get('cart')->totalQty ?? 0) > 0)
+                                <span id="cart-badge" class="badge bg-success rounded-pill position-absolute"
+                                      style="top:-6px; left:12px; min-width:18px; height:18px; font-size:0.7rem; display:flex; align-items:center; justify-content:center; padding:0 4px;">
+                                    {{ Session::get('cart')->totalQty }}
+                                </span>
+                            @else
+                                <span id="cart-badge" class="badge bg-success rounded-pill position-absolute"
+                                      style="top:-6px; left:12px; min-width:18px; height:18px; font-size:0.7rem; display:{{ (Session::get('cart')->totalQty ?? 0) > 0 ? 'flex' : 'none' }}; align-items:center; justify-content:center; padding:0 4px;">
+                                    0
+                                </span>
                             @endif
                         </a>
                     </div>
@@ -443,8 +509,8 @@
             <div class="col-lg-2">
                 <h5 class="text-white">Danh mục</h5>
                 <ul class="list-unstyled mt-3">
-                    @foreach(\App\Models\Food::getCategories() as $key => $label)
-                    <li><a href="{{ route('foods.category', $key) }}" class="text-decoration-none" style="color:rgba(255,255,255,0.6);">{{ $label }}</a></li>
+                    @foreach(\App\Models\Category::where('is_active', true)->orderBy('id')->get() as $cat)
+                    <li><a href="{{ route('foods.category', $cat->id) }}" class="text-decoration-none" style="color:rgba(255,255,255,0.6);">{{ $cat->name }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -469,7 +535,7 @@
         <hr class="border-white-25 mt-4">
         <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
             <div class="text-white-50">© 2026 AT10 FASHION - All rights reserved.</div>
-            <a href="{{ route('admin.getLogin') }}" class="text-white-50 text-decoration-none small">
+            <a href="{{ route('getlogin') }}" class="text-white-50 text-decoration-none small">
                 <i class="fas fa-lock me-1"></i>Quản trị
             </a>
         </div>
@@ -477,6 +543,97 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// ===== AJAX Add to Cart + Badge Bounce =====
+document.addEventListener('DOMContentLoaded', function () {
+    const cartBadge = document.getElementById('cart-badge');
+
+    function animateBadge(newQty) {
+        if (!cartBadge) return;
+        cartBadge.textContent = newQty;
+        cartBadge.style.display = 'flex';
+        cartBadge.classList.remove('cart-badge-bounce');
+        void cartBadge.offsetWidth; // force reflow
+        cartBadge.classList.add('cart-badge-bounce');
+        cartBadge.addEventListener('animationend', function () {
+            cartBadge.classList.remove('cart-badge-bounce');
+        }, { once: true });
+    }
+
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.add-to-cart-btn');
+        if (!btn) return;
+
+        e.preventDefault();
+
+        const url  = btn.dataset.url;
+        const icon = btn.querySelector('i') || btn;
+
+        if (!url) return;
+
+        // Visual feedback on button
+        btn.style.opacity = '0.7';
+        btn.style.transform = 'scale(0.9)';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                                || '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(r => r.json())
+        .then(data => {
+            btn.style.opacity = '1';
+            btn.style.transform = 'scale(1)';
+
+            if (data.success) {
+                animateBadge(data.totalQty);
+
+                // Show toast
+                showToast(data.message || 'Đã thêm vào giỏ hàng!', 'success');
+            }
+        })
+        .catch(() => {
+            btn.style.opacity = '1';
+            btn.style.transform = 'scale(1)';
+        });
+    });
+
+    // Simple toast notification
+    function showToast(msg, type) {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:8px;';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.style.cssText = 'background:#1a1a1a; color:#fff; padding:12px 20px; border-radius:10px; font-size:0.9rem; box-shadow:0 4px 16px rgba(0,0,0,0.2); display:flex; align-items:center; gap:10px; min-width:220px; animation: slideInRight 0.3s ease;';
+        toast.innerHTML = '<i class="fas fa-check-circle" style="color:#c9a96e;"></i> ' + msg;
+
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+});
+</script>
+
+<style>
+@keyframes slideInRight {
+    from { transform: translateX(100px); opacity: 0; }
+    to   { transform: translateX(0);     opacity: 1; }
+}
+</style>
+
 @stack('scripts')
 
 @if(env('FACEBOOK_PAGE_ID'))

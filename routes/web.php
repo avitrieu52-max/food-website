@@ -20,12 +20,12 @@ Route::get('/tim-kiem', [PageController::class, 'search'])->name('banhang.search
 
 Route::get('foods/manage', [FoodController::class, 'manage'])->name('foods.manage');
 Route::resource('foods', FoodController::class);
-Route::get('category/{category}', [FoodController::class, 'showByCategory'])->name('foods.category');
+Route::get('category/{categoryId}', [FoodController::class, 'showByCategory'])->name('foods.category');
 Route::get('/chitiet/{id}', [PageController::class, 'getChiTiet'])->name('banhang.chitiet');
 
 // Giỏ hàng
 Route::get('gio-hang', [PageController::class, 'getCart'])->name('banhang.giohang');
-Route::get('add-to-cart/{id}', [PageController::class, 'addToCart'])->name('banhang.addtocart');
+Route::post('add-to-cart/{id}', [PageController::class, 'addToCart'])->name('banhang.addtocart');
 Route::get('del-cart/{id}', [PageController::class, 'delCartItem'])->name('banhang.xoagiohang');
 Route::post('update-cart/{id}', [PageController::class, 'updateCart'])->name('banhang.updatecart');
 Route::get('checkout', [PageController::class, 'getCheckout'])->name('banhang.getdathang');
@@ -59,7 +59,8 @@ Route::post('/dangnhap', [PageController::class, 'postLogin'])->name('postlogin'
 Route::get('/dangxuat', [PageController::class, 'getLogout'])->name('getlogout');
 
 // ===================== ADMIN AUTH =====================
-Route::get('/admin/dangnhap', [UserController::class, 'getLogin'])->name('admin.getLogin');
+// Redirect /admin/dangnhap về trang đăng nhập chung
+Route::get('/admin/dangnhap', fn() => redirect()->route('getlogin'))->name('admin.getLogin');
 Route::post('/admin/dangnhap', [UserController::class, 'postLogin'])->name('admin.postLogin');
 Route::get('/admin/dangxuat', [UserController::class, 'getLogout'])->name('admin.getLogout');
 

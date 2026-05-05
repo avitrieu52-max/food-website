@@ -48,6 +48,6 @@ class UserController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.getLogin');
+        return redirect()->route('getlogin');
     }
 }

@@ -17,6 +17,6 @@ class AdminLoginMiddleware
             }
         }
 
-        return redirect()->route('admin.getLogin');
+        return redirect()->route('getlogin')->with(['flag' => 'danger', 'message' => 'Vui lòng đăng nhập với tài khoản quản trị']);
     }
 }

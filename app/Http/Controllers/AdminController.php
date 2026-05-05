@@ -32,60 +32,57 @@ class AdminController extends Controller
     // ===================== QUẢN LÝ SẢN PHẨM =====================
     public function foodList(Request $request)
     {
-        $query = Food::query();
+        $query = Food::with('category');
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
-        $foods = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
-        $categories = Food::getCategories();
+        $foods      = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        $categories = \App\Models\Category::where('is_active', true)->orderBy('id')->get();
         return view('admin.food.list', compact('foods', 'categories'));
     }
 
     public function foodCreate()
     {
-        $categories = Food::getCategories();
+        $categories = \App\Models\Category::where('is_active', true)->orderBy('id')->get();
         return view('admin.food.create', compact('categories'));
     }
 
     public function foodStore(Request $request)
     {
         $request->validate([
-            'name'       => 'required|string|max:200',
-            'price'      => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'category'   => 'required|in:ao_nam,ao_nu,quan_nam,quan_nu,vay_dam,phu_kien',
-            'stock'      => 'required|integer|min:0',
-            'image'      => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'name'        => 'required|string|max:200',
+            'price'       => 'required|numeric|min:0',
+            'sale_price'  => 'nullable|numeric|min:0',
+            'category_id' => 'required|exists:type_products,id',
+            'stock'       => 'required|integer|min:0',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ], [
-            'name.required'     => 'Vui lòng nhập tên sản phẩm',
-            'price.required'    => 'Vui lòng nhập giá',
-            'category.required' => 'Vui lòng chọn danh mục',
+            'name.required'        => 'Vui lòng nhập tên sản phẩm',
+            'price.required'       => 'Vui lòng nhập giá',
+            'category_id.required' => 'Vui lòng chọn danh mục',
         ]);
 
-        $data = $request->only(['name', 'description', 'price', 'sale_price', 'category', 'stock']);
-        $data['slug'] = Str::slug($request->name) . '-' . time();
+        $data = $request->only(['name', 'description', 'price', 'sale_price', 'category_id', 'stock']);
+        $data['slug']        = \Illuminate\Support\Str::slug($request->name) . '-' . time();
         $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
-        $data['status'] = $request->has('status') ? 1 : 0;
+        $data['status']      = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             $imageDir = public_path('images/foods');
-            if (!file_exists($imageDir)) {
-                mkdir($imageDir, 0755, true);
-            }
+            if (!file_exists($imageDir)) mkdir($imageDir, 0755, true);
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move($imageDir, $imageName);
             $data['image'] = 'images/foods/' . $imageName;
         }
 
         Food::create($data);
-
         return redirect()->route('admin.food.list')->with('success', 'Thêm sản phẩm thành công!');
     }
 
     public function foodEdit($id)
     {
-        $food = Food::findOrFail($id);
-        $categories = Food::getCategories();
+        $food       = Food::findOrFail($id);
+        $categories = \App\Models\Category::where('is_active', true)->orderBy('id')->get();
         return view('admin.food.edit', compact('food', 'categories'));
     }
 
@@ -94,34 +91,31 @@ class AdminController extends Controller
         $food = Food::findOrFail($id);
 
         $request->validate([
-            'name'       => 'required|string|max:200',
-            'price'      => 'required|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
-            'category'   => 'required|in:ao_nam,ao_nu,quan_nam,quan_nu,vay_dam,phu_kien',
-            'stock'      => 'required|integer|min:0',
-            'image'      => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'name'        => 'required|string|max:200',
+            'price'       => 'required|numeric|min:0',
+            'sale_price'  => 'nullable|numeric|min:0',
+            'category_id' => 'required|exists:type_products,id',
+            'stock'       => 'required|integer|min:0',
+            'image'       => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
-        $data = $request->only(['name', 'description', 'price', 'sale_price', 'category', 'stock']);
-        $data['slug'] = Str::slug($request->name) . '-' . $id;
+        $data = $request->only(['name', 'description', 'price', 'sale_price', 'category_id', 'stock']);
+        $data['slug']        = \Illuminate\Support\Str::slug($request->name) . '-' . $id;
         $data['is_featured'] = $request->has('is_featured') ? 1 : 0;
-        $data['status'] = $request->has('status') ? 1 : 0;
+        $data['status']      = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             if ($food->image && file_exists(public_path($food->image))) {
                 unlink(public_path($food->image));
             }
             $imageDir = public_path('images/foods');
-            if (!file_exists($imageDir)) {
-                mkdir($imageDir, 0755, true);
-            }
+            if (!file_exists($imageDir)) mkdir($imageDir, 0755, true);
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move($imageDir, $imageName);
             $data['image'] = 'images/foods/' . $imageName;
         }
 
         $food->update($data);
-
         return redirect()->route('admin.food.list')->with('success', 'Cập nhật sản phẩm thành công!');
     }
 

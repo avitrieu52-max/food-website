@@ -18,7 +18,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('home') }}">Trang chủ</a></li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('foods.category', $food->category) }}">
+                    <a href="{{ route('foods.category', $food->category_id) }}">
                         {{ $food->category_label }}
                     </a>
                 </li>
@@ -51,9 +51,12 @@
         </div>
         
         <div class="d-grid gap-2 d-md-flex">
-            <a href="{{ route('banhang.addtocart', $food->id) }}" class="btn btn-success btn-lg">
+            <button type="button"
+                    class="btn btn-success btn-lg add-to-cart-btn"
+                    data-id="{{ $food->id }}"
+                    data-url="{{ route('banhang.addtocart', $food->id) }}">
                 <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
-            </a>
+            </button>
             <a href="{{ route('banhang.giohang') }}" class="btn btn-outline-success btn-lg">
                 <i class="fas fa-eye me-2"></i>Xem giỏ hàng
             </a>

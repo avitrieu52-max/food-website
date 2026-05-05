@@ -13,56 +13,57 @@ class Food extends Model
 
     protected $fillable = [
         'name', 'slug', 'description', 'price', 'sale_price',
-        'image', 'category', 'stock', 'is_featured', 'status'
+        'image', 'category_id', 'stock', 'is_featured', 'status',
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
+        'price'       => 'decimal:2',
+        'sale_price'  => 'decimal:2',
         'is_featured' => 'boolean',
-        'status' => 'boolean'
+        'status'      => 'boolean',
     ];
 
-    // Category labels
-    public static function getCategories()
+    // Relationship
+    public function category()
     {
-        return [
-            'ao_nam'    => 'Áo nam',
-            'ao_nu'     => 'Áo nữ',
-            'quan_nam'  => 'Quần nam',
-            'quan_nu'   => 'Quần nữ',
-            'vay_dam'   => 'Váy & Đầm',
-            'phu_kien'  => 'Phụ kiện',
-        ];
-    }
-
-    public function getCategoryLabelAttribute()
-    {
-        return self::getCategories()[$this->category] ?? $this->category;
-    }
-
-    public function getImageUrlAttribute()
-    {
-        if (! $this->image) {
-            return asset('images/placeholder.svg');
-        }
-
-        if (preg_match('/^https?:\/\//i', $this->image)) {
-            return $this->image;
-        }
-
-        return asset($this->image);
-    }
-
-    public function getFinalPriceAttribute()
-    {
-        return $this->sale_price && $this->sale_price > 0 
-            ? $this->sale_price 
-            : $this->price;
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class, 'food_id');
+    }
+
+    // Lấy tất cả danh mục từ DB (thay thế enum cứng)
+    public static function getCategories(): array
+    {
+        return Category::where('is_active', true)
+            ->orderBy('id')
+            ->pluck('name', 'id')
+            ->toArray();
+    }
+
+    // Tương thích ngược: trả về tên danh mục
+    public function getCategoryLabelAttribute(): string
+    {
+        return $this->category?->name ?? '';
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        if (!$this->image) {
+            return asset('images/placeholder.svg');
+        }
+        if (preg_match('/^https?:\/\//i', $this->image)) {
+            return $this->image;
+        }
+        return asset($this->image);
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        return $this->sale_price && $this->sale_price > 0
+            ? $this->sale_price
+            : $this->price;
     }
 }

@@ -30,7 +30,7 @@
             @else
                 {{-- Fallback slides khi chưa có dữ liệu --}}
                 <div class="carousel-item active">
-                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80');">
+                    <div class="hero-slide" style="background-image: url('https://picsum.photos/id/1062/1600/800');">
                         <div class="container">
                             <div class="carousel-caption text-start">
                                 <p class="text-uppercase mb-2 fw-semibold" style="color:#c9a96e; letter-spacing:3px;">Bộ sưu tập mới 2026</p>
@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80');">
+                    <div class="hero-slide" style="background-image: url('https://picsum.photos/id/1027/1600/800');">
                         <div class="container">
                             <div class="carousel-caption text-start">
                                 <p class="text-uppercase mb-2 fw-semibold" style="color:#c9a96e; letter-spacing:3px;">Thời trang nữ</p>
@@ -125,7 +125,7 @@
 
 <section class="container mb-5">
     <div class="banner-card position-relative overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=80" alt="Fashion Banner">
+        <img src="https://picsum.photos/id/1035/1600/800" alt="Fashion Banner">
         <div class="banner-content">
             <div class="banner-copy">
                 <span class="text-uppercase fw-semibold mb-3 d-inline-block" style="color:#c9a96e; letter-spacing:3px;">Sale mùa hè</span>

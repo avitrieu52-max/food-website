@@ -18,16 +18,18 @@
                 <h5 class="fw-bold mb-3"><i class="fas fa-filter me-2"></i>Danh mục</h5>
                 <ul class="list-unstyled">
                     <li class="mb-2">
-                        <a href="{{ route('foods.index', request()->except('category')) }}" 
-                           class="text-decoration-none {{ !request('category') ? 'text-success fw-bold' : 'text-dark' }}">
+                        <a href="{{ route('foods.index', request()->except('category')) }}"
+                           class="text-decoration-none {{ !request('category') ? 'fw-bold' : 'text-dark' }}"
+                           style="{{ !request('category') ? 'color:#c9a96e;' : '' }}">
                             Tất cả sản phẩm
                         </a>
                     </li>
-                    @foreach($categories as $key => $label)
+                    @foreach($categories as $cat)
                         <li class="mb-2">
-                            <a href="{{ route('foods.index', array_merge(request()->query(), ['category' => $key])) }}" 
-                               class="text-decoration-none {{ request('category') == $key ? 'text-success fw-bold' : 'text-dark' }}">
-                                {{ $label }}
+                            <a href="{{ route('foods.index', array_merge(request()->query(), ['category' => $cat->id])) }}"
+                               class="text-decoration-none {{ request('category') == $cat->id ? 'fw-bold' : 'text-dark' }}"
+                               style="{{ request('category') == $cat->id ? 'color:#c9a96e;' : '' }}">
+                                {{ $cat->name }}
                             </a>
                         </li>
                     @endforeach

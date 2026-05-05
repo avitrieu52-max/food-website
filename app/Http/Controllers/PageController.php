@@ -46,11 +46,11 @@ class PageController extends Controller
 
     public function getChiTiet($id)
     {
-        $food = Food::findOrFail($id);
-        $relatedProducts = Food::where('category', $food->category)
+        $food = Food::with('category')->findOrFail($id);
+        $relatedProducts = Food::with('category')
+            ->where('category_id', $food->category_id)
             ->where('id', '!=', $food->id)
-            ->limit(4)
-            ->get();
+            ->limit(4)->get();
 
         return view('foods.show', compact('food', 'relatedProducts'));
     }
@@ -92,6 +92,14 @@ class PageController extends Controller
         $cart->add($product, $id);
 
         $request->session()->put('cart', $cart);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success'  => true,
+                'totalQty' => $cart->totalQty,
+                'message'  => 'Đã thêm vào giỏ hàng!',
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Thêm sản phẩm vào giỏ hàng thành công.');
     }
@@ -185,10 +193,19 @@ class PageController extends Controller
         $credentials = ['email' => $request->email, 'password' => $request->password];
 
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+            // Admin hoặc Manager → vào trang quản trị
+            if (in_array($user->level, [1, 2])) {
+                return redirect()->route('admin.dashboard')->with('success', 'Đăng nhập thành công!');
+            }
+
+            // Khách hàng → về trang chủ
             return redirect()->route('banhang.index')->with(['flag' => 'alert', 'message' => 'Đăng nhập thành công']);
         }
 
-        return redirect()->back()->with(['flag' => 'danger', 'message' => 'Đăng nhập không thành công']);
+        return redirect()->back()->with(['flag' => 'danger', 'message' => 'Email hoặc mật khẩu không đúng']);
     }
 
     public function getLogout(Request $request)
@@ -197,7 +214,7 @@ class PageController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('banhang.index');
+        return redirect()->route('getlogin');
     }
 
     public function getCheckout()

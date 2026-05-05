@@ -31,10 +31,10 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fw-semibold">Danh mục <span class="text-danger">*</span></label>
-                    <select name="category" class="form-select" required>
+                    <select name="category_id" class="form-select" required>
                         <option value="">-- Chọn danh mục --</option>
-                        @foreach($categories as $key => $label)
-                            <option value="{{ $key }}" {{ old('category', $food->category) == $key ? 'selected' : '' }}>{{ $label }}</option>
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat->id }}" {{ old('category_id', $food->category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
                         @endforeach
                     </select>
                 </div>
