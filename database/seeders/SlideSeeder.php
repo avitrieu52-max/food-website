@@ -5,6 +5,10 @@ namespace Database\Seeders;
 use App\Models\Slide;
 use Illuminate\Database\Seeder;
 
+/**
+ * Seeder tạo dữ liệu slide/banner mẫu cho trang chủ.
+ * Chạy lệnh: php artisan db:seed --class=SlideSeeder
+ */
 class SlideSeeder extends Seeder
 {
     public function run(): void
@@ -52,6 +56,7 @@ class SlideSeeder extends Seeder
             ],
         ];
 
+        // Tạo từng slide từ dữ liệu mẫu
         foreach ($slides as $slide) {
             Slide::create($slide);
         }

@@ -5,20 +5,31 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Migration thống nhất hệ thống danh mục sản phẩm.
+ * Chuyển từ cột enum cứng (category) sang khóa ngoại động (category_id → type_products).
+ *
+ * Các bước thực hiện:
+ * 1. Thêm slug và is_active vào bảng type_products
+ * 2. Xóa dữ liệu cũ và seed 6 danh mục quần áo
+ * 3. Thêm cột category_id vào t_food
+ * 4. Map giá trị enum cũ sang category_id mới
+ * 5. Đặt category_id NOT NULL và thêm khóa ngoại
+ * 6. Xóa cột enum cũ
+ */
 return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Thêm slug vào type_products
+        // Bước 1: Thêm slug và is_active vào bảng type_products
         Schema::table('type_products', function (Blueprint $table) {
             $table->string('slug', 100)->nullable()->after('name');
             $table->boolean('is_active')->default(true)->after('image');
         });
 
-        // 2. Xóa dữ liệu cũ không liên quan
+        // Bước 2: Xóa dữ liệu cũ và seed 6 danh mục quần áo
         DB::table('type_products')->truncate();
 
-        // 3. Seed 6 danh mục quần áo
         $categories = [
             ['name' => 'Áo nam',    'slug' => 'ao_nam'],
             ['name' => 'Áo nữ',     'slug' => 'ao_nu'],
@@ -38,18 +49,18 @@ return new class extends Migration
             ]);
         }
 
-        // 4. Thêm category_id vào t_food (nullable trước)
+        // Bước 3: Thêm cột category_id vào t_food (nullable trước để map dữ liệu)
         Schema::table('t_food', function (Blueprint $table) {
             $table->unsignedBigInteger('category_id')->nullable()->after('category');
         });
 
-        // 5. Map enum cũ → category_id mới
+        // Bước 4: Map giá trị enum cũ (slug) sang category_id mới
         $map = DB::table('type_products')->pluck('id', 'slug');
         foreach ($map as $slug => $id) {
             DB::table('t_food')->where('category', $slug)->update(['category_id' => $id]);
         }
 
-        // 6. Đặt category_id NOT NULL với default = category đầu tiên
+        // Bước 5: Đặt category_id NOT NULL và thêm khóa ngoại
         $firstId = DB::table('type_products')->value('id');
         DB::table('t_food')->whereNull('category_id')->update(['category_id' => $firstId]);
 
@@ -58,7 +69,7 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('type_products')->onDelete('restrict');
         });
 
-        // 7. Xóa cột enum cũ
+        // Bước 6: Xóa cột enum cũ (không còn cần thiết)
         Schema::table('t_food', function (Blueprint $table) {
             $table->dropColumn('category');
         });
@@ -66,6 +77,7 @@ return new class extends Migration
 
     public function down(): void
     {
+        // Khôi phục cột enum cũ và xóa category_id
         Schema::table('t_food', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
             $table->dropColumn('category_id');

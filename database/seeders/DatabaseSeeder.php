@@ -6,25 +6,30 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * Seeder gốc của ứng dụng.
+ * Gọi tất cả các seeder con theo thứ tự.
+ * Chạy lệnh: php artisan db:seed
+ */
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    use WithoutModelEvents; // Tắt model events khi seed để tăng hiệu suất
 
     /**
-     * Seed the application's database.
+     * Chạy tất cả seeder để khởi tạo dữ liệu mẫu cho ứng dụng.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Tạo một user test mặc định bằng factory
         User::factory()->create([
-            'name' => 'Test User',
+            'name'  => 'Test User',
             'email' => 'test@example.com',
         ]);
 
+        // Gọi các seeder con theo thứ tự
         $this->call([
-            FoodSeeder::class,
-            AdminUserSeeder::class,
+            AdminUserSeeder::class,  // Tạo tài khoản admin/manager
+            SlideSeeder::class,      // Tạo slide/banner trang chủ
         ]);
     }
 }
