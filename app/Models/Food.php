@@ -27,10 +27,12 @@ class Food extends Model
     public static function getCategories()
     {
         return [
-            'hoa_qua' => 'Hoa quả',
-            'thuc_pham_huu_co' => 'Thực phẩm hữu cơ',
-            'thuc_pham_kho' => 'Thực phẩm khô',
-            'san_pham_noi_bat' => 'Sản phẩm nổi bật'
+            'ao_nam'    => 'Áo nam',
+            'ao_nu'     => 'Áo nữ',
+            'quan_nam'  => 'Quần nam',
+            'quan_nu'   => 'Quần nữ',
+            'vay_dam'   => 'Váy & Đầm',
+            'phu_kien'  => 'Phụ kiện',
         ];
     }
 
@@ -57,5 +59,10 @@ class Food extends Model
         return $this->sale_price && $this->sale_price > 0 
             ? $this->sale_price 
             : $this->price;
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class, 'food_id');
     }
 }

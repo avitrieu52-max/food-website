@@ -1,8 +1,17 @@
 <div class="product-item">
-    <div class="product-img">
+    <div class="product-img position-relative">
         <a href="{{ route('banhang.chitiet', $food->id) }}">
             <img src="{{ $food->image_url }}" alt="{{ $food->name }}">
         </a>
+        @auth
+        <form action="{{ route('wishlist.toggle', $food->id) }}" method="POST" class="position-absolute top-0 end-0 m-2">
+            @csrf
+            @php $inWishlist = in_array($food->id, auth()->user()->wishlistFoodIds()); @endphp
+            <button type="submit" class="btn btn-sm rounded-circle" style="background:rgba(255,255,255,0.9); border:none; width:34px; height:34px;" title="{{ $inWishlist ? 'Bỏ yêu thích' : 'Yêu thích' }}">
+                <i class="fas fa-heart" style="color:{{ $inWishlist ? '#e74c3c' : '#ccc' }};"></i>
+            </button>
+        </form>
+        @endauth
     </div>
     <div class="product-info">
         <h5>

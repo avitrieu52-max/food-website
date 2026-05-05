@@ -38,5 +38,15 @@ class User extends Authenticatable
     {
         $this->attributes['name'] = $value;
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function wishlistFoodIds(): array
+    {
+        return $this->wishlists()->pluck('food_id')->toArray();
+    }
 }
 

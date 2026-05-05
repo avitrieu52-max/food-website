@@ -102,7 +102,21 @@
                     </tbody>
                     <tfoot class="table-light">
                         <tr>
-                            <td colspan="3" class="text-end fw-bold ps-3">Tổng cộng:</td>
+                            <td colspan="3" class="text-end fw-bold ps-3">Tạm tính:</td>
+                            <td class="text-center fw-bold">{{ number_format($order->total - $order->shipping_fee + $order->discount_amount) }}đ</td>
+                        </tr>
+                        @if($order->discount_amount > 0)
+                        <tr>
+                            <td colspan="3" class="text-end text-danger ps-3">Giảm giá ({{ $order->coupon_code }}):</td>
+                            <td class="text-center text-danger">-{{ number_format($order->discount_amount) }}đ</td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td colspan="3" class="text-end ps-3">Phí vận chuyển:</td>
+                            <td class="text-center">{{ $order->shipping_fee > 0 ? number_format($order->shipping_fee).'đ' : 'Miễn phí' }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold ps-3">Tổng thanh toán:</td>
                             <td class="text-center fw-bold text-success fs-5">{{ number_format($order->total) }}đ</td>
                         </tr>
                     </tfoot>

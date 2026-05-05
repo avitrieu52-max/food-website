@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Store - @yield('title')</title>
+    <title>AT10 Fashion - @yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,12 +14,12 @@
             font-family: 'Inter', sans-serif;
         }
         body {
-            background: #f4f6f2;
-            color: #2f3b2e;
+            background: #f8f5f2;
+            color: #2c2c2c;
         }
         .topbar {
-            background: #f3f7ef;
-            color: #5f7459;
+            background: #1a1a1a;
+            color: #c9a96e;
             font-size: 0.95rem;
         }
         .topbar a {
@@ -51,11 +51,11 @@
             gap: 1rem;
         }
         .hd-actions a {
-            color: #5f7459;
+            color: #2c2c2c;
             font-weight: 500;
         }
         .hd-actions a:hover {
-            color: #3d7a39;
+            color: #c9a96e;
         }
         .hero-slider {
             position: relative;
@@ -72,7 +72,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(19, 57, 30, 0.42);
+            background: rgba(10, 10, 10, 0.48);
         }
         .hero-slide .carousel-caption {
             position: relative;
@@ -103,7 +103,7 @@
             margin-bottom: 3.5rem;
             position: relative;
             display: inline-block;
-            color: #2f3b2e;
+            color: #2c2c2c;
         }
         .section-title::after {
             content: '';
@@ -112,7 +112,7 @@
             bottom: -15px;
             width: 80px;
             height: 5px;
-            background: linear-gradient(to right, #3d7a39, #5f9c5c);
+            background: linear-gradient(to right, #c9a96e, #e8c98a);
             border-radius: 999px;
         }
         .about-card,
@@ -131,7 +131,7 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: rgba(60,145,72,0.12);
+            background: rgba(201,169,110,0.12);
             display: grid;
             place-items: center;
             margin-bottom: 1.5rem;
@@ -144,10 +144,10 @@
             font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 0.85rem;
-            color: #2f3b2e;
+            color: #2c2c2c;
         }
         .about-card p {
-            color: #657764;
+            color: #6b6b6b;
             line-height: 1.8;
             margin-bottom: 0;
         }
@@ -197,7 +197,7 @@
             border-radius: 50px;
             padding: 0.5rem;
             display: inline-flex;
-            box-shadow: 0 8px 20px rgba(60,145,72,0.1);
+            box-shadow: 0 8px 20px rgba(201,169,110,0.15);
             margin-bottom: 3rem;
             gap: 0.5rem;
         }
@@ -206,17 +206,17 @@
             border: none;
             border-radius: 50px;
             padding: 0.8rem 1.8rem;
-            color: #5f7459;
+            color: #6b6b6b;
             font-weight: 600;
             transition: all 0.3s ease;
         }
         .product-tab button:hover {
-            background: rgba(60,145,72,0.08);
+            background: rgba(201,169,110,0.1);
         }
         .product-tab button.active {
-            background: linear-gradient(135deg, #3d7a39, #5f9c5c);
+            background: linear-gradient(135deg, #c9a96e, #e8c98a);
             color: white;
-            box-shadow: 0 4px 12px rgba(60,145,72,0.3);
+            box-shadow: 0 4px 12px rgba(201,169,110,0.35);
         }
         .product-item {
             border-radius: 1rem;
@@ -233,7 +233,7 @@
         .product-img {
             position: relative;
             overflow: hidden;
-            height: 250px;
+            height: 280px;
         }
         .product-img img {
             width: 100%;
@@ -254,11 +254,11 @@
             font-size: 1.05rem;
             font-weight: 700;
             margin-bottom: 0.75rem;
-            color: #2f3b2e;
+            color: #2c2c2c;
             line-height: 1.4;
         }
         .product-info p {
-            color: #657764;
+            color: #6b6b6b;
             margin-bottom: 1rem;
             min-height: 45px;
             flex: 0;
@@ -267,28 +267,39 @@
         .product-info .price {
             font-size: 1.25rem;
             font-weight: 700;
-            color: #3d7a39;
+            color: #c9a96e;
             margin-bottom: 0.75rem;
         }
         .product-info .original-price {
             font-size: 0.9rem;
-            color: #95a08c;
+            color: #aaa;
         }
         .product-actions .btn {
             border-radius: 0.75rem;
             padding: 0.75rem 1.5rem;
         }
+        .btn-success, .btn-outline-success:hover {
+            background-color: #c9a96e !important;
+            border-color: #c9a96e !important;
+            color: #fff !important;
+        }
+        .btn-outline-success {
+            color: #c9a96e !important;
+            border-color: #c9a96e !important;
+        }
+        .text-success { color: #c9a96e !important; }
+        .badge.bg-success { background-color: #c9a96e !important; }
         .footer {
-            background: #24382c;
-            color: rgba(255,255,255,0.82);
+            background: #1a1a1a;
+            color: rgba(255,255,255,0.75);
             margin-top: 5rem;
             padding: 3rem 0 2rem;
         }
         .footer a {
-            color: rgba(255,255,255,0.72);
+            color: rgba(255,255,255,0.6);
         }
         .footer a:hover {
-            color: #ffffff;
+            color: #c9a96e;
         }
         @media (max-width: 992px) {
             .hero-slide .carousel-caption {
@@ -337,19 +348,19 @@
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     @auth
-                        <span class="text-white-50">Chào bạn {{ Auth::user()->full_name }}</span>
-                        <a href="{{ route('getlogout') }}" class="text-decoration-none">Đăng xuất</a>
+                        <span style="color:#c9a96e;">Chào bạn {{ Auth::user()->full_name }}</span>
+                        <a href="{{ route('getlogout') }}" class="text-decoration-none" style="color:#6b6b6b;">Đăng xuất</a>
                     @else
-                        <a href="{{ route('getlogin') }}" class="text-decoration-none">Đăng nhập</a>
-                        <a href="{{ route('getsignin') }}" class="text-decoration-none">Đăng ký</a>
+                        <a href="{{ route('getlogin') }}" class="text-decoration-none" style="color:#c9a96e;">Đăng nhập</a>
+                        <a href="{{ route('getsignin') }}" class="text-decoration-none" style="color:#c9a96e;">Đăng ký</a>
                     @endauth
                 </div>
             </div>
         </div>
         <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
             <div class="container">
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    <img src="https://at10.mediawz.com/wp-content/uploads/2021/06/AT10-1.png" alt="AT10 FOOD">
+                <a class="navbar-brand fw-bold fs-4" href="{{ route('home') }}" style="color:#1a1a1a; letter-spacing:2px;">
+                    <i class="fas fa-tshirt me-2" style="color:#c9a96e;"></i>AT10 <span style="color:#c9a96e;">FASHION</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavigation" aria-controls="mainNavigation" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -358,14 +369,33 @@
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Trang chủ</a></li>
                         <li class="nav-item"><a class="nav-link" href="#about">Giới thiệu</a></li>
-                        <li class="nav-item"><a class="nav-link {{ request()->routeIs('foods.index') ? 'active' : '' }}" href="{{ route('foods.index') }}">Sản phẩm</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {{ request()->routeIs('foods.*') ? 'active' : '' }}" href="{{ route('foods.index') }}" data-bs-toggle="dropdown">
+                                Sản phẩm
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('foods.index') }}">Tất cả sản phẩm</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                @foreach(\App\Models\Food::getCategories() as $key => $label)
+                                <li><a class="dropdown-item" href="{{ route('foods.category', $key) }}">{{ $label }}</a></li>
+                                @endforeach
+                            </ul>
+                        </li>
                         <li class="nav-item"><a class="nav-link {{ request()->routeIs('banhang.giohang') ? 'active' : '' }}" href="{{ route('banhang.giohang') }}">Giỏ hàng</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#contact">Liên hệ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#contact">Liên hệ</a></li>
                     </ul>
                     <div class="hd-actions">
                         <a href="{{ route('banhang.search') }}" class="action-link" data-bs-toggle="collapse" data-bs-target="#searchBar" aria-expanded="false">
                             <i class="fas fa-search"></i>
                         </a>
+                        @auth
+                        <a href="{{ route('wishlist.index') }}" class="action-link position-relative" title="Yêu thích">
+                            <i class="fas fa-heart" style="color:#c9a96e;"></i>
+                        </a>
+                        <a href="{{ route('account.index') }}" class="action-link" title="Tài khoản">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        @endauth
                         <a href="{{ route('banhang.giohang') }}" class="action-link position-relative">
                             <i class="fas fa-shopping-cart"></i>
                             @if(Session::has('cart'))
@@ -402,8 +432,8 @@
     <div class="container">
         <div class="row gy-4">
             <div class="col-lg-4">
-                <h4 class="text-white mb-3"><i class="fas fa-leaf me-2"></i>AT10 FOOD</h4>
-                <p>Chuyên cung cấp thực phẩm sạch, an toàn và chất lượng cao. Cam kết mang đến sản phẩm tốt nhất cho sức khỏe gia đình bạn.</p>
+                <h4 class="text-white mb-3"><i class="fas fa-tshirt me-2"></i>AT10 FASHION</h4>
+                <p>Chuyên cung cấp thời trang nam nữ chất lượng cao, phong cách hiện đại và giá cả hợp lý. Cam kết mang đến sản phẩm tốt nhất cho phong cách của bạn.</p>
                 <div class="mt-3">
                     <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
@@ -414,7 +444,7 @@
                 <h5 class="text-white">Danh mục</h5>
                 <ul class="list-unstyled mt-3">
                     @foreach(\App\Models\Food::getCategories() as $key => $label)
-                    <li><a href="{{ route('foods.category', $key) }}" class="text-white-50 text-decoration-none">{{ $label }}</a></li>
+                    <li><a href="{{ route('foods.category', $key) }}" class="text-decoration-none" style="color:rgba(255,255,255,0.6);">{{ $label }}</a></li>
                     @endforeach
                 </ul>
             </div>
@@ -438,7 +468,7 @@
         </div>
         <hr class="border-white-25 mt-4">
         <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
-            <div class="text-white-50">© 2026 AT10 FOOD - All rights reserved.</div>
+            <div class="text-white-50">© 2026 AT10 FASHION - All rights reserved.</div>
             <a href="{{ route('admin.getLogin') }}" class="text-white-50 text-decoration-none small">
                 <i class="fas fa-lock me-1"></i>Quản trị
             </a>
@@ -448,5 +478,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 @stack('scripts')
+
+@if(env('FACEBOOK_PAGE_ID'))
+<!-- Facebook Messenger Customer Chat Plugin -->
+<div id="fb-root"></div>
+<div class="fb-customerchat"
+     attribution="biz_inbox"
+     page_id="{{ env('FACEBOOK_PAGE_ID') }}">
+</div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({ xfbml: true, version: 'v18.0' });
+  };
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+@endif
 </body>
 </html>

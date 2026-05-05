@@ -40,9 +40,9 @@
         <div class="mb-4">
             <span class="badge bg-secondary">Còn lại: {{ $food->stock }} sản phẩm</span>
             @if($food->is_featured)
-                <span class="badge bg-warning text-dark">Sản phẩm nổi bật</span>
+                <span class="badge bg-warning text-dark"><i class="fas fa-star me-1"></i>Nổi bật</span>
             @endif
-            <span class="badge bg-info">{{ $food->category_label }}</span>
+            <span class="badge" style="background:#c9a96e;">{{ $food->category_label }}</span>
         </div>
         
         <div class="mb-4">

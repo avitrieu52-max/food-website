@@ -1,56 +1,58 @@
 @extends('layouts.app')
 
-@section('title', 'Trang chủ - AT10 FOOD')
+@section('title', 'Trang chủ - AT10 FASHION')
 
 @section('content')
 <div class="hero-slider mb-5">
     <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="hero-slide" style="background-image: url('https://at10.mediawz.com/wp-content/uploads/2019/06/ms_banner_img1.jpg');">
-                    <div class="container">
-                        <div class="carousel-caption text-start">
-                            <p class="text-uppercase text-white mb-2 fw-semibold">Thực phẩm hữu cơ 1</p>
-                            <h1>Thực phẩm tốt cho sức khỏe của bạn</h1>
-                            <p>Chúng tôi mang đến sản phẩm an toàn, tươi mới và hoàn toàn tự nhiên cho gia đình Việt.</p>
-                            <div class="d-flex gap-3 flex-wrap">
-                                <a href="#products" class="btn btn-success btn-hero">Xem sản phẩm</a>
-                                <a href="#about" class="btn btn-outline-light btn-hero">Tìm hiểu thêm</a>
+            @if($slides->count() > 0)
+                @foreach($slides as $i => $slide)
+                <div class="carousel-item {{ $i === 0 ? 'active' : '' }}">
+                    <div class="hero-slide" style="background-image: url('{{ $slide->image_url }}');">
+                        <div class="container">
+                            <div class="carousel-caption text-start">
+                                @if($slide->subtitle)
+                                    <p class="text-uppercase mb-2 fw-semibold" style="color:#c9a96e; letter-spacing:3px;">{{ $slide->subtitle }}</p>
+                                @endif
+                                <h1>{{ $slide->title }}</h1>
+                                @if($slide->description)
+                                    <p>{{ $slide->description }}</p>
+                                @endif
+                                @if($slide->link)
+                                    <a href="{{ $slide->link }}" class="btn btn-success btn-hero">{{ $slide->button_text ?? 'Xem ngay' }}</a>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <div class="hero-slide" style="background-image: url('https://at10.mediawz.com/wp-content/uploads/2019/06/ms_banner_img2.jpg');">
-                    <div class="container">
-                        <div class="carousel-caption text-start">
-                            <p class="text-uppercase text-white mb-2 fw-semibold">Thực phẩm hữu cơ 2</p>
-                            <h1>Chất lượng luôn là ưu tiên hàng đầu</h1>
-                            <p>Thực phẩm sạch, dây chuyền sản xuất chuẩn an toàn và phục vụ chu đáo.</p>
-                            <div class="d-flex gap-3 flex-wrap">
-                                <a href="#products" class="btn btn-success btn-hero">Xem sản phẩm</a>
-                                <a href="#about" class="btn btn-outline-light btn-hero">Tìm hiểu thêm</a>
+                @endforeach
+            @else
+                {{-- Fallback slides khi chưa có dữ liệu --}}
+                <div class="carousel-item active">
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80');">
+                        <div class="container">
+                            <div class="carousel-caption text-start">
+                                <p class="text-uppercase mb-2 fw-semibold" style="color:#c9a96e; letter-spacing:3px;">Bộ sưu tập mới 2026</p>
+                                <h1>Phong cách của bạn<br>Bắt đầu từ đây</h1>
+                                <p>Thời trang hiện đại, chất liệu cao cấp, thiết kế tinh tế.</p>
+                                <a href="{{ route('foods.index') }}" class="btn btn-success btn-hero">Khám phá ngay</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <div class="hero-slide" style="background-image: url('https://at10.mediawz.com/wp-content/uploads/2019/06/ms_banner_img3.jpg');">
-                    <div class="container">
-                        <div class="carousel-caption text-start">
-                            <p class="text-uppercase text-white mb-2 fw-semibold">Thực phẩm hữu cơ 3</p>
-                            <h1>Sống khỏe mỗi ngày với thực phẩm thiên nhiên</h1>
-                            <p>Sản phẩm tươi ngon, không chất bảo quản và giao hàng nhanh chóng.</p>
-                            <div class="d-flex gap-3 flex-wrap">
-                                <a href="#products" class="btn btn-success btn-hero">Xem sản phẩm</a>
-                                <a href="#about" class="btn btn-outline-light btn-hero">Tìm hiểu thêm</a>
+                <div class="carousel-item">
+                    <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&q=80');">
+                        <div class="container">
+                            <div class="carousel-caption text-start">
+                                <p class="text-uppercase mb-2 fw-semibold" style="color:#c9a96e; letter-spacing:3px;">Thời trang nữ</p>
+                                <h1>Thanh lịch &amp; Hiện đại</h1>
+                                <a href="{{ route('foods.category', 'ao_nu') }}" class="btn btn-success btn-hero">Xem ngay</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -80,33 +82,42 @@
         </form>
     </div>
 
-    <div class="section-title">Giới thiệu</div>
-    <div class="row gy-4 align-items-center">
-        <div class="col-lg-4">
-            <div class="about-card mb-4">
-                <div class="about-icon"><img src="https://at10.mediawz.com/wp-content/uploads/2019/06/hab_left_icon_1.png" alt="100% Tự Nhiên"></div>
-                <h5>100% Tự Nhiên</h5>
-                <p>Chúng tôi quan tâm đến những gì bạn ăn. Thực phẩm của chúng tôi tốt cho cơ thể và ngon miệng.</p>
-            </div>
-            <div class="about-card">
-                <div class="about-icon"><img src="https://at10.mediawz.com/wp-content/uploads/2019/06/hab_left_icon_2.png" alt="Luôn tươi mới"></div>
-                <h5>Luôn tươi mới</h5>
-                <p>Mỗi sản phẩm đều được chọn lọc nghiêm ngặt và giao đến tay bạn trong tình trạng tốt nhất.</p>
+    <div class="section-title">Tại sao chọn chúng tôi</div>
+    <div class="row gy-4 align-items-stretch">
+        <div class="col-lg-3 col-md-6">
+            <div class="about-card text-center">
+                <div class="about-icon mx-auto">
+                    <i class="fas fa-tshirt fa-2x" style="color:#c9a96e;"></i>
+                </div>
+                <h5>Chất liệu cao cấp</h5>
+                <p>Vải cotton, linen, lụa tự nhiên được chọn lọc kỹ càng, thoáng mát và bền đẹp theo thời gian.</p>
             </div>
         </div>
-        <div class="col-lg-4 text-center">
-            <img src="https://at10.mediawz.com/wp-content/uploads/2019/06/hab_center_img.jpg" alt="Giới thiệu" class="img-fluid rounded-4 shadow-lg">
-        </div>
-        <div class="col-lg-4">
-            <div class="about-card mb-4">
-                <div class="about-icon"><img src="https://at10.mediawz.com/wp-content/uploads/2019/06/hab_right_icon_1.png" alt="Sản phẩm tự nhiên"></div>
-                <h5>Sản phẩm tự nhiên</h5>
-                <p>Nguyên liệu tự nhiên, an toàn và phù hợp cho mọi thành viên trong gia đình.</p>
+        <div class="col-lg-3 col-md-6">
+            <div class="about-card text-center">
+                <div class="about-icon mx-auto">
+                    <i class="fas fa-truck fa-2x" style="color:#c9a96e;"></i>
+                </div>
+                <h5>Giao hàng nhanh</h5>
+                <p>Giao hàng toàn quốc trong 2-3 ngày. Miễn phí vận chuyển cho đơn hàng từ 500.000đ.</p>
             </div>
-            <div class="about-card">
-                <div class="about-icon"><img src="https://at10.mediawz.com/wp-content/uploads/2019/06/hab_right_icon_2.png" alt="Chất lượng tốt nhất"></div>
-                <h5>Chất lượng tốt nhất</h5>
-                <p>Quy trình kiểm định nghiêm ngặt đảm bảo bạn nhận được thực phẩm chất lượng cao.</p>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="about-card text-center">
+                <div class="about-icon mx-auto">
+                    <i class="fas fa-undo fa-2x" style="color:#c9a96e;"></i>
+                </div>
+                <h5>Đổi trả dễ dàng</h5>
+                <p>Chính sách đổi trả trong 30 ngày nếu sản phẩm lỗi hoặc không vừa size. Không cần lý do.</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="about-card text-center">
+                <div class="about-icon mx-auto">
+                    <i class="fas fa-star fa-2x" style="color:#c9a96e;"></i>
+                </div>
+                <h5>Thiết kế độc quyền</h5>
+                <p>Bộ sưu tập được thiết kế riêng, cập nhật xu hướng thời trang mới nhất mỗi mùa.</p>
             </div>
         </div>
     </div>
@@ -114,13 +125,13 @@
 
 <section class="container mb-5">
     <div class="banner-card position-relative overflow-hidden">
-        <img src="https://at10.mediawz.com/wp-content/uploads/2020/08/hbanner1_bg_down.jpg" alt="Thực phẩm tốt">
+        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1600&q=80" alt="Fashion Banner">
         <div class="banner-content">
             <div class="banner-copy">
-                <span class="text-uppercase text-white fw-semibold mb-3 d-inline-block">Thực phẩm tốt</span>
-                <h2>Cảm xúc vui</h2>
-                <p>Thực phẩm của chúng tôi luôn tươi mới, không chất độc hại, mang đến dinh dưỡng hoàn hảo mỗi ngày.</p>
-                <a href="#products" class="btn btn-light btn-hero">Xem ngay</a>
+                <span class="text-uppercase fw-semibold mb-3 d-inline-block" style="color:#c9a96e; letter-spacing:3px;">Sale mùa hè</span>
+                <h2>Giảm đến 50%<br>Bộ sưu tập hè</h2>
+                <p>Hàng trăm mẫu áo, quần, váy đầm đang được giảm giá mạnh. Nhanh tay sở hữu ngay hôm nay!</p>
+                <a href="{{ route('foods.index', ['sort' => 'newest']) }}" class="btn btn-light btn-hero">Mua ngay</a>
             </div>
         </div>
     </div>
@@ -129,7 +140,7 @@
 {{-- Section: Sản phẩm mới --}}
 <section id="new-products" class="container mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
-        <div class="section-title mb-0">Sản phẩm mới</div>
+        <div class="section-title mb-0">Hàng mới về</div>
         <a href="{{ route('foods.index') }}" class="btn btn-outline-success btn-sm">Xem tất cả</a>
     </div>
     <div class="row gy-4">
@@ -144,7 +155,7 @@
 {{-- Section: Sản phẩm khuyến mãi --}}
 <section id="promotion-products" class="container mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
-        <div class="section-title mb-0">Sản phẩm khuyến mãi</div>
+        <div class="section-title mb-0">Đang giảm giá</div>
         <a href="{{ route('foods.index', ['sort' => 'newest']) }}" class="btn btn-outline-success btn-sm">Xem tất cả</a>
     </div>
     <div class="row gy-4">
@@ -156,10 +167,10 @@
     </div>
 </section>
 
-{{-- Section: Sản phẩm nổi bật (Top) --}}
+{{-- Section: Sản phẩm nổi bật --}}
 <section id="top-products" class="container mb-5">
     <div class="d-flex justify-content-between align-items-end mb-4">
-        <div class="section-title mb-0">Sản phẩm đề nghị</div>
+        <div class="section-title mb-0">Sản phẩm nổi bật</div>
         <a href="{{ route('foods.index') }}" class="btn btn-outline-success btn-sm">Xem tất cả</a>
     </div>
     <div class="row gy-4">
@@ -188,8 +199,8 @@
 
 <section class="container mb-5" id="guide">
     <div class="newsletter-card p-5 text-center">
-        <h3 class="mb-3">Đăng ký nhận tin</h3>
-        <p class="mb-4">Nhận thông tin mới nhất về sản phẩm và chương trình ưu đãi mỗi ngày.</p>
+        <h3 class="mb-3">Đăng ký nhận ưu đãi</h3>
+        <p class="mb-4">Nhận thông tin bộ sưu tập mới và mã giảm giá độc quyền qua email mỗi tuần.</p>
         <form class="row g-3 justify-content-center">
             <div class="col-md-6">
                 <input type="email" class="form-control form-control-lg" placeholder="Email của bạn">
@@ -202,20 +213,50 @@
 </section>
 
 <section class="container mb-5" id="contact">
+    <div class="section-title">Liên hệ với chúng tôi</div>
+    @if(session('contact_success'))
+        <div class="alert alert-success alert-dismissible fade show">{{ session('contact_success') }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    @endif
     <div class="row gy-4">
         <div class="col-lg-4">
-            <div class="about-card">
-                <h5>Liên hệ</h5>
-                <p>Hotline: 0123.456.789</p>
-                <p>Email: contact@demo.com</p>
-                <p>Địa chỉ: 123 Nguyễn Văn Linh, Đà Nẵng</p>
+            <div class="about-card h-100">
+                <h5><i class="fas fa-map-marker-alt me-2" style="color:#c9a96e;"></i>Thông tin liên hệ</h5>
+                <p class="mb-1"><i class="fas fa-phone me-2"></i>Hotline: 0123.456.789</p>
+                <p class="mb-1"><i class="fas fa-envelope me-2"></i>Email: contact@demo.com</p>
+                <p class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>123 Nguyễn Văn Linh, Đà Nẵng</p>
+                <h5><i class="far fa-clock me-2" style="color:#c9a96e;"></i>Giờ mở cửa</h5>
+                <p class="mb-1">Thứ 2 - Thứ 6: 8:00 - 21:00</p>
+                <p class="mb-0">Thứ 7 - Chủ nhật: 9:00 - 22:00</p>
             </div>
         </div>
         <div class="col-lg-8">
             <div class="about-card">
-                <h5>Giờ mở cửa</h5>
-                <p>8:00 - 22:00 tất cả các ngày trong tuần.</p>
-                <p>Chúng tôi luôn sẵn sàng phục vụ bạn với thực phẩm sạch và dịch vụ tận tâm.</p>
+                <h5 class="mb-4"><i class="fas fa-paper-plane me-2" style="color:#c9a96e;"></i>Gửi tin nhắn cho chúng tôi</h5>
+                <form action="{{ route('contact.store') }}" method="POST">
+                    @csrf
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Họ tên <span class="text-danger">*</span></label>
+                            <input type="text" name="contact_name" value="{{ old('contact_name') }}" class="form-control @error('contact_name') is-invalid @enderror" required>
+                            @error('contact_name')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                            <input type="email" name="contact_email" value="{{ old('contact_email') }}" class="form-control @error('contact_email') is-invalid @enderror" required>
+                            @error('contact_email')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Nội dung <span class="text-danger">*</span></label>
+                            <textarea name="contact_message" class="form-control @error('contact_message') is-invalid @enderror" rows="5" required maxlength="1000" placeholder="Nhập nội dung tin nhắn...">{{ old('contact_message') }}</textarea>
+                            @error('contact_message')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success px-5">
+                                <i class="fas fa-paper-plane me-2"></i>Gửi tin nhắn
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

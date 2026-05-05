@@ -22,7 +22,7 @@ class FoodRequest extends FormRequest
             'price' => 'required|numeric|min:1000',
             'sale_price' => 'nullable|numeric|min:0|lt:price',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-            'category' => 'required|in:hoa_qua,thuc_pham_huu_co,thuc_pham_kho,san_pham_noi_bat',
+            'category' => 'required|in:ao_nam,ao_nu,quan_nam,quan_nu,vay_dam,phu_kien',
             'stock' => 'required|integer|min:0',
             'is_featured' => 'boolean',
             'status' => 'boolean'

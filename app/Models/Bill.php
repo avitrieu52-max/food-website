@@ -18,6 +18,9 @@ class Bill extends Model
         'payment',
         'note',
         'status',
+        'coupon_code',
+        'discount_amount',
+        'shipping_fee',
     ];
 
     public function customer()

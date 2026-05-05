@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderStatusMail;
 use App\Models\Bill;
 use App\Models\BillDetail;
 use App\Models\Food;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -50,7 +53,7 @@ class AdminController extends Controller
             'name'       => 'required|string|max:200',
             'price'      => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',
-            'category'   => 'required|in:hoa_qua,thuc_pham_huu_co,thuc_pham_kho,san_pham_noi_bat',
+            'category'   => 'required|in:ao_nam,ao_nu,quan_nam,quan_nu,vay_dam,phu_kien',
             'stock'      => 'required|integer|min:0',
             'image'      => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ], [
@@ -94,7 +97,7 @@ class AdminController extends Controller
             'name'       => 'required|string|max:200',
             'price'      => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',
-            'category'   => 'required|in:hoa_qua,thuc_pham_huu_co,thuc_pham_kho,san_pham_noi_bat',
+            'category'   => 'required|in:ao_nam,ao_nu,quan_nam,quan_nu,vay_dam,phu_kien',
             'stock'      => 'required|integer|min:0',
             'image'      => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
@@ -159,8 +162,21 @@ class AdminController extends Controller
     public function orderUpdateStatus(Request $request, $id)
     {
         $request->validate(['status' => 'required|in:pending,confirmed,shipping,delivered,cancelled']);
-        $order = Bill::findOrFail($id);
+        $order = Bill::with('customer')->findOrFail($id);
         $order->update(['status' => $request->status]);
+
+        // Gửi email thông báo cập nhật trạng thái
+        if ($order->customer && $order->customer->email) {
+            try {
+                Mail::to($order->customer->email)->send(new OrderStatusMail($order));
+            } catch (\Exception $e) {
+                Log::error('Failed to send order status email', [
+                    'bill_id' => $order->id,
+                    'email'   => $order->customer->email,
+                    'error'   => $e->getMessage(),
+                ]);
+            }
+        }
 
         return redirect()->back()->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
     }

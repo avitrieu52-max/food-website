@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="{{ route('admin.dashboard') }}">
-            <i class="fas fa-leaf me-2"></i>AT10 Admin
+            <i class="fas fa-tshirt me-2" style="color:#c9a96e;"></i>AT10 Fashion Admin
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
             <span class="navbar-toggler-icon"></span>
@@ -52,6 +52,38 @@
                         <li><a class="dropdown-item" href="{{ route('admin.user.list') }}">Danh sách</a></li>
                         <li><a class="dropdown-item" href="{{ route('admin.user.create') }}">Thêm mới</a></li>
                     </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('admin.slide.*') ? 'active' : '' }}"
+                       href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-images me-1"></i>Slide
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="{{ route('admin.slide.list') }}">Danh sách</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.slide.create') }}">Thêm mới</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.contact.*') ? 'active' : '' }}"
+                       href="{{ route('admin.contact.list') }}">
+                        <i class="fas fa-envelope me-1"></i>Liên hệ
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ request()->routeIs('admin.coupon.*') ? 'active' : '' }}"
+                       href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-tag me-1"></i>Mã giảm giá
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="{{ route('admin.coupon.list') }}">Danh sách</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.coupon.create') }}">Thêm mới</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.shipping.*') ? 'active' : '' }}"
+                       href="{{ route('admin.shipping.list') }}">
+                        <i class="fas fa-truck me-1"></i>Phí vận chuyển
+                    </a>
                 </li>
             </ul>
             <div class="d-flex align-items-center text-white">
