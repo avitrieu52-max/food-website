@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         // Gọi các seeder con theo thứ tự
         $this->call([
             AdminUserSeeder::class,  // Tạo tài khoản admin/manager
+            FoodSeeder::class,       // Tạo sản phẩm thời trang
             SlideSeeder::class,      // Tạo slide/banner trang chủ
         ]);
     }

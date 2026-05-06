@@ -20,30 +20,33 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Tạo tài khoản Admin (level 1 - toàn quyền quản trị)
-        User::create([
+        User::updateOrCreate([
+            'email' => 'admin@example.com',
+        ], [
             'name'     => 'Admin',
-            'email'    => 'admin@example.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('123456'),
             'phone'    => '0123456789',
             'address'  => 'Admin Address',
             'level'    => 1,
         ]);
 
         // Tạo tài khoản Manager (level 2 - quản lý)
-        User::create([
+        User::updateOrCreate([
+            'email' => 'manager@example.com',
+        ], [
             'name'     => 'Manager',
-            'email'    => 'manager@example.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('123456'),
             'phone'    => '0987654321',
             'address'  => 'Manager Address',
             'level'    => 2,
         ]);
 
         // Tạo tài khoản khách hàng mẫu (level 3 - khách hàng)
-        User::create([
+        User::updateOrCreate([
+            'email' => 'customer@example.com',
+        ], [
             'name'     => 'Customer',
-            'email'    => 'customer@example.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('123456'),
             'phone'    => '0123456789',
             'address'  => 'Customer Address',
             'level'    => 3,
